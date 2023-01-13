@@ -37,12 +37,11 @@ public class PersonController {
 
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person) {
-        // TODO: 13.01.2023 исправить по замечанию нет пользователя и не совпадает логин
-        try {
-            this.persons.save(person);
-        } catch (Exception e) {
+        var result = this.persons.findById(person.getId());
+        if (result.isEmpty() || !person.getLogin().equals(result.get().getLogin())) {
             return ResponseEntity.badRequest().build();
         }
+        this.persons.save(person);
         return ResponseEntity.ok().build();
     }
 
@@ -50,12 +49,10 @@ public class PersonController {
     public ResponseEntity<Void> delete(@PathVariable int id) {
         Person person = new Person();
         person.setId(id);
-        // TODO: 13.01.2023 исправить по замечанию не пользователя
-        try {
-            this.persons.delete(person);
-        } catch (Exception e) {
+        if (this.persons.findById(person.getId()).isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+        this.persons.delete(person);
         return ResponseEntity.ok().build();
     }
 }
