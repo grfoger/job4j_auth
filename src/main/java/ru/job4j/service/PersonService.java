@@ -26,7 +26,20 @@ public class PersonService {
         return repository.save(person);
     }
 
-    public void delete(Person person) {
+    public boolean update(Person person) {
+        int id = person.getId();
+        if (!repository.existsById(id) || !person.getLogin().equals(repository.findById(id).get().getLogin())) {
+            return false;
+        }
+        repository.save(person);
+        return true;
+    }
+
+    public boolean delete(Person person) {
+        if (!repository.existsById(person.getId())) {
+            return false;
+        }
         repository.delete(person);
+        return true;
     }
 }

@@ -37,11 +37,9 @@ public class PersonController {
 
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person) {
-        var result = this.persons.findById(person.getId());
-        if (result.isEmpty() || !person.getLogin().equals(result.get().getLogin())) {
+        if (!this.persons.update(person)) {
             return ResponseEntity.badRequest().build();
         }
-        this.persons.save(person);
         return ResponseEntity.ok().build();
     }
 
@@ -49,10 +47,9 @@ public class PersonController {
     public ResponseEntity<Void> delete(@PathVariable int id) {
         Person person = new Person();
         person.setId(id);
-        if (this.persons.findById(person.getId()).isEmpty()) {
+        if (!this.persons.delete(person)) {
             return ResponseEntity.badRequest().build();
         }
-        this.persons.delete(person);
         return ResponseEntity.ok().build();
     }
 }
