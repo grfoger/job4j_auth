@@ -2,6 +2,7 @@ package ru.job4j.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.job4j.domain.Person;
 import ru.job4j.repository.PersonRepository;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class PersonService {
 
     private final PersonRepository repository;
+    private final BCryptPasswordEncoder encoder;
     public List<Person> findAll() {
         return (List<Person>) repository.findAll();
     }
@@ -23,6 +25,7 @@ public class PersonService {
     }
 
     public Person save(Person person) {
+        person.setPassword(encoder.encode(person.getPassword()));
         return repository.save(person);
     }
 
@@ -31,6 +34,7 @@ public class PersonService {
         if (!repository.existsById(id) || !person.getLogin().equals(repository.findById(id).get().getLogin())) {
             return false;
         }
+        person.setPassword(encoder.encode(person.getPassword()));
         repository.save(person);
         return true;
     }
