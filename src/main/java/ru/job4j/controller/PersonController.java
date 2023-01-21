@@ -57,7 +57,6 @@ public class PersonController {
 
     @PostMapping("/sign-up")
     public void signUp(@RequestBody Person person) {
-        person.setPassword(encoder.encode(person.getPassword()));
         persons.save(person);
     }
 }
