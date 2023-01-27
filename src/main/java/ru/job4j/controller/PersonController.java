@@ -38,12 +38,14 @@ public class PersonController {
         """;
 
     @GetMapping(value = {"/", "/all"})
-    public List<Person> findAll() {
+    public ResponseEntity<List<Person>> findAll() {
         List<Person> list = this.persons.findAll();
         if (list.isEmpty()) {
             throw new NoSuchElementException("Have not users");
         }
-        return list;
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT)
+                .contentLength(list.toString().length())
+                .body(list);
     }
 
     @GetMapping("/{id}")
