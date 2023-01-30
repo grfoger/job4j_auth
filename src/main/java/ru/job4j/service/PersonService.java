@@ -46,4 +46,13 @@ public class PersonService {
         repository.delete(person);
         return true;
     }
+
+    public void patch(Person person) {
+        if(person.getLogin() != null) {
+            repository.patchLogin(person.getLogin(), person.getId());
+        }
+        if(person.getPassword() != null) {
+            repository.patchPass(encoder.encode(person.getPassword()), person.getId());
+        }
+    }
 }

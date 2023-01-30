@@ -106,6 +106,16 @@ public class PersonController {
         persons.save(person);
     }
 
+    @PatchMapping("/edit/{id}")
+    public void patch(@RequestBody Person person, @PathVariable int id) {
+        person.setId(id);
+        if ((person.getLogin() != null && person.getLogin().length() < 5)
+        || (person.getLogin() != null && person.getPassword().length() < 7)) {
+            throw new IllegalArgumentException(IS_SHORT_MSG);
+        }
+        persons.patch(person);
+    }
+
     @ExceptionHandler(value = { IllegalArgumentException.class })
     public void exceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
